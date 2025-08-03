@@ -28,11 +28,11 @@ Every submission must include these fields:
 - `paper_title`: Full title of the paper
 - `paper_pdf`: URL to the paper PDF (e.g., arXiv, journal website)
 - `identifier`: Paper identifier (e.g., arXiv ID, DOI)
+- `code_url`: URL to the code repository (GitHub or other)
 - `claims`: List of reproducible claims with instructions (at least one required)
 
 ### Optional Fields
 
-- `code_url`: URL to the code repository
 - `data_url`: URL to datasets (if separate from code)
 
 ### Claims Structure
@@ -67,7 +67,7 @@ username: your_github_username
 paper_title: "Response Matching for generating materials and molecules"
 paper_pdf: "https://arxiv.org/pdf/2405.09057.pdf"
 identifier: "2405.09057"
-code_url: "https://github.com/yourname/repo"  # Optional
+code_url: "https://github.com/yourname/repo"
 data_url: "https://doi.org/10.5281/zenodo.1234567"  # Optional
 
 claims:
@@ -92,9 +92,10 @@ Your submission will be automatically validated when you create a Pull Request. 
 
 1. File format (must be valid JSON or YAML)
 2. All required fields are present and non-empty
-3. URLs are properly formatted
+3. URLs are properly formatted (must start with http:// or https://)
 4. At least one claim with instructions is provided
 5. Username format is valid
+6. Code repository URL is provided
 
 ## What Happens After Merge
 

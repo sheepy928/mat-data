@@ -132,13 +132,11 @@ function collectFormData() {
         username: formData.get('username'),
         paper_title: formData.get('paper_title'),
         paper_pdf: formData.get('paper_pdf'),
-        identifier: formData.get('identifier')
+        identifier: formData.get('identifier'),
+        code_url: formData.get('code_url')
     };
     
     // Add optional fields if present
-    if (formData.get('code_url')) {
-        data.code_url = formData.get('code_url');
-    }
     if (formData.get('data_url')) {
         data.data_url = formData.get('data_url');
     }

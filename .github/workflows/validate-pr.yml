@@ -33,6 +33,8 @@ jobs:
           submissions/**/*.json
           submissions/**/*.yaml
           submissions/**/*.yml
+        files_ignore: |
+          submissions/.gitkeep
     
     - name: Validate submissions
       run: |
@@ -83,7 +85,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '❌ Validation failed! Please check the workflow logs for details.\n\nMake sure your submission:\n- Is placed in the `submissions/` directory\n- Is a valid JSON or YAML file\n- Contains all required fields: `username`, `paper_title`, `paper_pdf`, `identifier`, `claims`\n- Has at least one claim with instructions\n- Has a valid filename (letters, numbers, underscores, hyphens only)'
+            body: '❌ Validation failed! Please check the workflow logs for details.\n\nMake sure your submission:\n- Is placed in the `submissions/` directory\n- Is a valid JSON or YAML file\n- Contains all required fields: `username`, `paper_title`, `paper_pdf`, `identifier`, `code_url`, `claims`\n- Has at least one claim with instructions\n- Has a valid filename (letters, numbers, underscores, hyphens only)'
           })
     
     - name: Comment PR Success

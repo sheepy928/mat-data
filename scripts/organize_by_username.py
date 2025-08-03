@@ -44,6 +44,10 @@ def organize_files(source_dir: str, target_dir: str):
     
     # Process all JSON and YAML files in source directory
     for filepath in source_path.rglob('*'):
+        # Skip .gitkeep file
+        if filepath.name == '.gitkeep':
+            continue
+            
         if filepath.suffix.lower() in ['.json', '.yaml', '.yml']:
             print(f"Processing: {filepath}")
             

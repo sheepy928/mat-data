@@ -15,7 +15,7 @@ class SubmissionValidator:
     def __init__(self, required_fields: List[str] = None):
         # Default required fields for materials science papers
         self.required_fields = required_fields or [
-            'username', 'paper_title', 'paper_pdf', 'identifier', 'claims'
+            'username', 'paper_title', 'paper_pdf', 'identifier', 'code_url', 'claims'
         ]
         self.errors = []
         self.warnings = []
@@ -93,8 +93,6 @@ class SubmissionValidator:
                 url = str(data[field]).strip()
                 if not url.startswith(('http://', 'https://')):
                     self.errors.append(f"{field} must be a valid URL starting with http:// or https://")
-                if field == 'paper_pdf' and not url.endswith('.pdf'):
-                    self.warnings.append(f"{field} should point to a PDF file")
         
         # Validate identifier (e.g., arxiv ID)
         if 'identifier' in data:
