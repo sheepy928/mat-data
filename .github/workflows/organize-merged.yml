@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'submissions/**'
-    paths-ignore:
-      - 'submissions/.gitkeep'
+      - 'submissions/**/*.json'
+      - 'submissions/**/*.yaml' 
+      - 'submissions/**/*.yml'
 
 jobs:
   organize:
