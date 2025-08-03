@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materials Science Paper Submission Form</title>
+    <title>RepliCan: Call for Contribution</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Materials Science Paper Reproducibility Submission</h1>
+            <h1>RepliCan: Call for Contribution</h1>
             <p>Submit reproducibility instructions for materials science papers</p>
         </header>
 
@@ -42,9 +42,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="code_url">Code Repository URL *</label>
+                    <label>Claim Type *</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="claim_type" value="custom_code" checked onchange="updateCodeUrlRequirement()">
+                            <span>Custom Code Repository</span>
+                            <small>Claims requiring a specific codebase (code URL required)</small>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="claim_type" value="pip_libraries" onchange="updateCodeUrlRequirement()">
+                            <span>Pip-installable Libraries</span>
+                            <small>Claims reproducible with standard libraries (code URL optional)</small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="code_url">Code Repository URL <span id="code_url_required">*</span></label>
                     <input type="url" id="code_url" name="code_url" required>
-                    <small>GitHub or other repository URL</small>
+                    <small id="code_url_hint">GitHub or other repository URL</small>
                 </div>
 
                 <div class="form-group">

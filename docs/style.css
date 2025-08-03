@@ -183,6 +183,49 @@ header p {
     margin-right: 5px;
 }
 
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.radio-label {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.radio-label:hover {
+    border-color: var(--secondary-color);
+    background-color: rgba(52, 152, 219, 0.05);
+}
+
+.radio-label input[type="radio"] {
+    margin-right: 10px;
+}
+
+.radio-label span {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.radio-label small {
+    margin-left: 25px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+.radio-label input[type="radio"]:checked + span {
+    color: var(--secondary-color);
+}
+
 .form-actions {
     text-align: center;
     margin-top: 30px;

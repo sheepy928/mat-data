@@ -1,6 +1,23 @@
 let claimCount = 1;
 let stepCounts = {0: 1};
 
+function updateCodeUrlRequirement() {
+    const claimType = document.querySelector('input[name="claim_type"]:checked').value;
+    const codeUrlInput = document.getElementById('code_url');
+    const codeUrlRequired = document.getElementById('code_url_required');
+    const codeUrlHint = document.getElementById('code_url_hint');
+    
+    if (claimType === 'pip_libraries') {
+        codeUrlInput.removeAttribute('required');
+        codeUrlRequired.style.display = 'none';
+        codeUrlHint.textContent = 'GitHub or other repository URL (optional for pip-installable claims)';
+    } else {
+        codeUrlInput.setAttribute('required', 'required');
+        codeUrlRequired.style.display = 'inline';
+        codeUrlHint.textContent = 'GitHub or other repository URL';
+    }
+}
+
 function addStep(claimIndex) {
     const container = document.getElementById(`instructions_${claimIndex}`);
     const stepIndex = stepCounts[claimIndex] || 0;
@@ -133,8 +150,14 @@ function collectFormData() {
         paper_title: formData.get('paper_title'),
         paper_pdf: formData.get('paper_pdf'),
         identifier: formData.get('identifier'),
-        code_url: formData.get('code_url')
+        claim_type: formData.get('claim_type')
     };
+    
+    // Add code_url - required for custom_code, optional for pip_libraries
+    const codeUrl = formData.get('code_url');
+    if (codeUrl || data.claim_type === 'custom_code') {
+        data.code_url = codeUrl;
+    }
     
     // Add optional fields if present
     if (formData.get('data_url')) {

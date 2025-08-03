@@ -15,7 +15,7 @@ class SubmissionValidator:
     def __init__(self, required_fields: List[str] = None):
         # Default required fields for materials science papers
         self.required_fields = required_fields or [
-            'username', 'paper_title', 'paper_pdf', 'identifier', 'code_url', 'claims'
+            'username', 'paper_title', 'paper_pdf', 'identifier', 'claim_type', 'claims'
         ]
         self.errors = []
         self.warnings = []
@@ -80,6 +80,20 @@ class SubmissionValidator:
                 self.errors.append("Username can only contain letters, numbers, hyphens, and underscores")
             elif len(username) > 39:  # GitHub username limit
                 self.errors.append("Username is too long (max 39 characters)")
+        
+        # Validate claim_type
+        if 'claim_type' in data:
+            claim_type = str(data['claim_type']).strip()
+            if claim_type not in ['custom_code', 'pip_libraries']:
+                self.errors.append("claim_type must be either 'custom_code' or 'pip_libraries'")
+            
+            # Check code_url requirement based on claim_type
+            if claim_type == 'custom_code' and not data.get('code_url'):
+                self.errors.append("code_url is required for custom_code claim type")
+        else:
+            # If claim_type is missing, assume it requires code_url for backward compatibility
+            if not data.get('code_url'):
+                self.errors.append("code_url is required (or specify claim_type as 'pip_libraries' if using standard libraries)")
         
         # Validate paper_title
         if 'paper_title' in data:
