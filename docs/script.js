@@ -225,7 +225,20 @@ function copyToClipboard() {
 function downloadFile() {
     const content = document.getElementById('outputContent').textContent;
     const format = document.querySelector('input[name="format"]:checked').value;
-    const filename = `submission.${format}`;
+    
+    // Get username from form
+    const username = document.getElementById('username').value.trim();
+    
+    // Generate UTC timestamp in format: YYYYMMDD_HHMMSS
+    const now = new Date();
+    const timestamp = now.getUTCFullYear() +
+        String(now.getUTCMonth() + 1).padStart(2, '0') +
+        String(now.getUTCDate()).padStart(2, '0') + '_' +
+        String(now.getUTCHours()).padStart(2, '0') +
+        String(now.getUTCMinutes()).padStart(2, '0') +
+        String(now.getUTCSeconds()).padStart(2, '0');
+    
+    const filename = `${timestamp}_${username}.${format}`;
     
     const blob = new Blob([content], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);

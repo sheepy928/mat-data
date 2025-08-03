@@ -44,8 +44,11 @@ def organize_files(source_dir: str, target_dir: str):
     
     # Process all JSON and YAML files in source directory
     for filepath in source_path.rglob('*'):
-        # Skip .gitkeep file
+        # Skip .gitkeep and example files
         if filepath.name == '.gitkeep':
+            continue
+        if filepath.stem.lower() == 'example_submission':
+            print(f"Skipping example file: {filepath}")
             continue
             
         if filepath.suffix.lower() in ['.json', '.yaml', '.yml']:
