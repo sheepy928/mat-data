@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials Science Paper Submission Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Materials Science Paper Reproducibility Submission</h1>
+            <p>Submit reproducibility instructions for materials science papers</p>
+        </header>
+
+        <form id="submissionForm">
+            <div class="form-section">
+                <h2>Basic Information</h2>
+                
+                <div class="form-group">
+                    <label for="username">GitHub Username *</label>
+                    <input type="text" id="username" name="username" required pattern="[a-zA-Z0-9_-]+" maxlength="39">
+                    <small>Your GitHub username (letters, numbers, hyphens, underscores only)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="paper_title">Paper Title *</label>
+                    <input type="text" id="paper_title" name="paper_title" required>
+                    <small>Full title of the paper</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="paper_pdf">Paper PDF URL *</label>
+                    <input type="url" id="paper_pdf" name="paper_pdf" required pattern="https?://.*\.pdf">
+                    <small>URL to the paper PDF (e.g., arXiv link)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="identifier">Paper Identifier *</label>
+                    <input type="text" id="identifier" name="identifier" required>
+                    <small>arXiv ID, DOI, or other unique identifier</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="code_url">Code Repository URL</label>
+                    <input type="url" id="code_url" name="code_url" pattern="https?://.*">
+                    <small>GitHub or other repository URL (optional)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="data_url">Dataset URL</label>
+                    <input type="url" id="data_url" name="data_url" pattern="https?://.*">
+                    <small>Link to datasets if separate from code (optional)</small>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Reproducibility Claims</h2>
+                <p>Add at least one claim with reproduction instructions</p>
+                
+                <div id="claimsContainer">
+                    <div class="claim-block" data-claim-index="0">
+                        <h3>Claim 1</h3>
+                        <div class="form-group">
+                            <label for="claim_0">Claim Description *</label>
+                            <textarea id="claim_0" name="claim_0" rows="3" required></textarea>
+                            <small>The specific claim from the paper you're documenting</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Reproduction Instructions *</label>
+                            <div class="instructions-container" id="instructions_0">
+                                <div class="instruction-step">
+                                    <input type="text" name="instruction_0_0" placeholder="Step 1" required>
+                                    <button type="button" class="btn-remove-step" onclick="removeStep(0, 0)">×</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-step" onclick="addStep(0)">+ Add Step</button>
+                        </div>
+                        
+                        <button type="button" class="btn-remove-claim" onclick="removeClaim(0)" style="display: none;">Remove Claim</button>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-add-claim" onclick="addClaim()">+ Add Another Claim</button>
+            </div>
+
+            <div class="form-section">
+                <h2>Output Format</h2>
+                <div class="format-selector">
+                    <label>
+                        <input type="radio" name="format" value="json" checked>
+                        JSON
+                    </label>
+                    <label>
+                        <input type="radio" name="format" value="yaml">
+                        YAML
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Generate File</button>
+                <button type="button" class="btn-secondary" onclick="resetForm()">Reset Form</button>
+            </div>
+        </form>
+
+        <div id="output" class="output-section" style="display: none;">
+            <h2>Generated File</h2>
+            <div class="output-actions">
+                <button onclick="copyToClipboard()" class="btn-copy">Copy to Clipboard</button>
+                <button onclick="downloadFile()" class="btn-download">Download File</button>
+            </div>
+            <pre id="outputContent"></pre>
+        </div>
+
+        <div class="instructions-section">
+            <h2>How to Submit</h2>
+            <ol>
+                <li>Fill out the form above with your paper's information</li>
+                <li>Click "Generate File" to create a JSON or YAML file</li>
+                <li>Download the file and save it to your forked repository in the <code>submissions/</code> directory</li>
+                <li>Create a Pull Request with your submission</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="js-yaml.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

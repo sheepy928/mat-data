@@ -1,0 +1,28 @@
+{
+  "username": "example_user",
+  "paper_title": "Response Matching for generating materials and molecules",
+  "paper_pdf": "https://arxiv.org/pdf/2405.09057.pdf",
+  "identifier": "2405.09057",
+  "code_url": "https://github.com/yourname/repo",
+  "data_url": "https://doi.org/10.5281/zenodo.1234567",
+  "claims": [
+    {
+      "claim": "Response Matching can generate Li-S structures that match known structures in the Materials Project database, including structures that were not in the training set.",
+      "instruction": [
+        "git checkout 3f4a9b2",
+        "pip install -r requirements.txt",
+        "python predict.py --structure data/some.dat -T 300",
+        "Check output/conductivity.txt; value should be 8.4 ± 0.2 mS cm⁻¹"
+      ]
+    },
+    {
+      "claim": "DFT validation gives an activation barrier of 0.21 eV.",
+      "instruction": [
+        "cd dft/nbarr",
+        "bash run_neb.sh Li10GeP2S12",
+        "python parse_neb.py results/neb.out",
+        "This should give 0.21 ± 0.02 eV"
+      ]
+    }
+  ]
+}

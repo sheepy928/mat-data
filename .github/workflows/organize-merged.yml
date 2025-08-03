@@ -1,0 +1,109 @@
+name: Organize Merged Submissions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'submissions/**'
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+    
+    - name: Configure Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+    
+    - name: Organize files by username
+      id: organize
+      run: |
+        echo "🔄 Organizing submission files by username..."
+        
+        # Run the organization script
+        if python scripts/organize_by_username.py submissions/ data/organized/; then
+          echo "✅ Files organized successfully"
+          echo "organized=true" >> $GITHUB_OUTPUT
+        else
+          echo "⚠️  Some errors occurred during organization"
+          echo "organized=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Check for changes
+      id: check_changes
+      run: |
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Commit and push changes
+      if: steps.check_changes.outputs.changes == 'true'
+      run: |
+        # Add all changes
+        git add .
+        
+        # Create commit message
+        commit_message="🗂️ Organize submissions by username"
+        
+        # Add details about the commit that triggered this
+        if [ -n "${{ github.event.head_commit.message }}" ]; then
+          commit_message="$commit_message
+        
+        Triggered by: ${{ github.event.head_commit.message }}"
+        fi
+        
+        # Commit changes
+        git commit -m "$commit_message"
+        
+        # Push changes
+        git push
+    
+    - name: Create summary
+      run: |
+        echo "## 📊 Organization Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ steps.organize.outputs.organized }}" == "true" ]; then
+          echo "✅ **Status:** Successfully organized submission files" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "⚠️  **Status:** Organization completed with some errors" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📁 User Directories" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # List user directories
+        if [ -d "data/organized" ]; then
+          for dir in data/organized/*/; do
+            if [ -d "$dir" ]; then
+              username=$(basename "$dir")
+              file_count=$(find "$dir" -type f | wc -l)
+              echo "- **$username**: $file_count file(s)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        else
+          echo "No user directories found." >> $GITHUB_STEP_SUMMARY
+        fi
