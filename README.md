@@ -58,7 +58,7 @@ python scripts/organize_by_username.py <source_dir> <target_dir>
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.12+
 - PyYAML (for YAML file support)
 
 ## License
