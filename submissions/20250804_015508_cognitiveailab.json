@@ -1,0 +1,17 @@
+{
+  "username": "cognitiveailab",
+  "paper_title": "Magnetic ground state of supported monatomic Fe chains from first principles",
+  "paper_pdf": "https://arxiv.org/pdf/2206.01072",
+  "identifier": "2206.01072",
+  "claim_tdype": "custom_code",
+  "data_url": "https://github.com/sheepy928/mat-data.git",
+  "claims": [
+    {
+      "claim": "This sentence has five words. ",
+      "instruction": [
+        "Install python",
+        "Run `echo \"This is a test sentence\" | python3 -c 'import sys; print(len(sys.stdin.read().strip().split(\" \")))'` in a shell"
+      ]
+    }
+  ]
+}
