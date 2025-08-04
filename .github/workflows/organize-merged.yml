@@ -66,6 +66,9 @@ jobs:
     - name: Commit and push changes
       if: steps.check_changes.outputs.changes == 'true'
       run: |
+        # Pull latest changes to avoid conflicts
+        git pull --rebase
+        
         # Add all changes
         git add .
         
@@ -82,8 +85,25 @@ jobs:
         # Commit changes
         git commit -m "$commit_message"
         
-        # Push changes
-        git push
+        # Push changes with retry logic
+        max_retries=3
+        retry_count=0
+        
+        while [ $retry_count -lt $max_retries ]; do
+          if git push; then
+            echo "✅ Successfully pushed changes"
+            break
+          else
+            retry_count=$((retry_count + 1))
+            if [ $retry_count -lt $max_retries ]; then
+              echo "⚠️ Push failed, pulling latest changes and retrying (attempt $retry_count/$max_retries)..."
+              git pull --rebase
+            else
+              echo "❌ Failed to push after $max_retries attempts"
+              exit 1
+            fi
+          fi
+        done
     
     - name: Create summary
       run: |
