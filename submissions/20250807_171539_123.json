@@ -1,0 +1,18 @@
+{
+  "username": "123",
+  "paper_title": "321",
+  "paper_pdf": "https://repro-data.sheepy.me/",
+  "identifier": "123123",
+  "claim_type": "pip_libraries",
+  "code_url": "https://repro-data.sheepy.me/",
+  "data_url": "https://repro-data.sheepy.me/",
+  "claims": [
+    {
+      "claim": "This sentence has five words.",
+      "instruction": [
+        "open python",
+        "str split"
+      ]
+    }
+  ]
+}
