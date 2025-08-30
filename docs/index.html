@@ -19,25 +19,25 @@
                 
                 <div class="form-group">
                     <label for="username">GitHub Username *</label>
-                    <input type="text" id="username" name="username" required pattern="[a-zA-Z0-9_-]+" maxlength="39">
-                    <small>Your GitHub username (letters, numbers, hyphens, underscores only)</small>
+                    <input type="text" id="username" name="username" required maxlength="39" placeholder="sheepy928">
+                    <small>Your GitHub username</small>
                 </div>
 
                 <div class="form-group">
                     <label for="paper_title">Paper Title *</label>
-                    <input type="text" id="paper_title" name="paper_title" required>
+                    <input type="text" id="paper_title" name="paper_title" required placeholder="Attention Is All You Need">
                     <small>Full title of the paper</small>
                 </div>
 
                 <div class="form-group">
                     <label for="paper_pdf">Paper PDF URL *</label>
-                    <input type="url" id="paper_pdf" name="paper_pdf" required>
+                    <input type="url" id="paper_pdf" name="paper_pdf" required placeholder="https://arxiv.org/abs/1706.03762">
                     <small>URL to the paper PDF (e.g., arXiv link)</small>
                 </div>
 
                 <div class="form-group">
                     <label for="identifier">Paper Identifier *</label>
-                    <input type="text" id="identifier" name="identifier" required>
+                    <input type="text" id="identifier" name="identifier" required placeholder="10.48550/arXiv.1706.03762">
                     <small>arXiv ID, DOI, or other unique identifier</small>
                 </div>
 
@@ -52,14 +52,15 @@
                         <label class="radio-label">
                             <input type="radio" name="claim_type" value="pip_libraries" onchange="updateCodeUrlRequirement()">
                             <span>Pip-installable Libraries</span>
-                            <small>Claims reproducible with standard libraries (code URL optional)</small>
+                            <small>Claims reproducible with standard libraries (code URL optional)<br>
+                            <em>Note: This is only for experiments that solely rely on CLI tools installed and does not require complex code base.</em></small>
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="code_url">Code Repository URL <span id="code_url_required">*</span></label>
-                    <input type="url" id="code_url" name="code_url" required>
+                    <input type="url" id="code_url" name="code_url" required placeholder="https://github.com/huggingface/transformers">
                     <small id="code_url_hint">GitHub or other repository URL</small>
                 </div>
 
@@ -71,8 +72,9 @@
             </div>
 
             <div class="form-section">
-                <h2>Reproducibility Claims</h2>
-                <p>Add at least one claim with reproduction instructions</p>
+                <h2>Reproducible Claims</h2>
+                <p>Explicitly list the quantitative claims from your paper.</p>
+                <p>Provide detailed instructions (combining inline code snippets and descriptive natural language) outlining how to execute your computational workflow to reproduce the results supporting this claim.</p>
                 
                 <div id="claimsContainer">
                     <div class="claim-block" data-claim-index="0">
@@ -81,6 +83,15 @@
                             <label for="claim_0">Claim Description *</label>
                             <textarea id="claim_0" name="claim_0" rows="3" required></textarea>
                             <small>The specific claim from the paper you're documenting</small>
+                        </div>
+                        
+                        <button type="button" class="btn-context-toggle" onclick="toggleContext(0)">+ Add Context (Optional)</button>
+                        <div class="context-group" id="context_group_0" style="display: none;">
+                            <div class="form-group">
+                                <label for="context_0">Context</label>
+                                <textarea id="context_0" name="context_0" rows="2"></textarea>
+                                <small>Conditions or assumptions under which this claim is valid</small>
+                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -99,6 +110,21 @@
                 </div>
                 
                 <button type="button" class="btn-add-claim" onclick="addClaim()">+ Add Another Claim</button>
+            </div>
+
+            <div class="form-section">
+                <h2>Non-Reproducible Claims</h2>
+                <p>Explicitly list the quantitative claims that are similar to the above claims, but are not reproducible. There could be several kinds:</p>
+                <ul>
+                    <li>Some claims that might not be reproducible due to data restrictions/unavailability</li>
+                    <li>Some claims that are inherently non-computational (e.g., requiring physical validation or being too abstract)</li>
+                    <li>Claims constrained by practical or physical limits (e.g., results not feasible to reproduce in realistic settings)</li>
+                </ul>
+                
+                <div id="nonReproducibleClaimsContainer">
+                </div>
+                
+                <button type="button" class="btn-add-claim" onclick="addNonReproducibleClaim()">+ Add Another Non-Reproducible Claim</button>
             </div>
 
             <div class="form-section">
@@ -135,13 +161,154 @@
             <ol>
                 <li>Fill out the form above with your paper's information</li>
                 <li>Click "Generate File" to create a JSON or YAML file</li>
-                <li>Download the file and save it to your forked repository in the <code>submissions/</code> directory</li>
-                <li>Create a Pull Request with your submission</li>
+                <li>Download the generated file to your computer</li>
+                <li>Navigate to <a href="placeholder github repo" target="_blank">placeholder github repo</a></li>
+                <li>Go to the <code>submissions/</code> directory</li>
+                <li>Click "Add file" → "Upload files"</li>
+                <li>Select the generated file you downloaded</li>
+                <li>Select "Create a new branch for this commit and start a pull request"</li>
+                <li>Create the pull request with your submission</li>
             </ol>
         </div>
     </div>
 
-    <script src="js-yaml.min.js"></script>
+    <!-- Optional js-yaml library for YAML generation -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script> -->
     <script src="script.js"></script>
+    <script>
+        // Toggle context function
+        window.toggleContext = function(claimIndex) {
+            const contextGroup = document.getElementById(`context_group_${claimIndex}`);
+            const button = contextGroup.previousElementSibling;
+            
+            if (contextGroup.style.display === 'none') {
+                contextGroup.style.display = 'block';
+                button.textContent = '− Remove Context';
+            } else {
+                contextGroup.style.display = 'none';
+                button.textContent = '+ Add Context (Optional)';
+                // Clear the context field when hiding
+                const contextField = document.getElementById(`context_${claimIndex}`);
+                if (contextField) {
+                    contextField.value = '';
+                }
+            }
+        }
+        
+        // Update reproducible claim numbers function
+        window.updateReproducibleClaimNumbers = function() {
+            const claims = document.querySelectorAll('#claimsContainer .claim-block');
+            const removeButtons = document.querySelectorAll('#claimsContainer .btn-remove-claim');
+            
+            // Update claim numbers
+            claims.forEach((claim, index) => {
+                const h3 = claim.querySelector('h3');
+                if (h3) {
+                    h3.innerHTML = `Claim ${index + 1}`;
+                }
+            });
+            
+            // Update remove button visibility
+            removeButtons.forEach(button => {
+                button.style.display = claims.length > 1 ? 'block' : 'none';
+            });
+        }
+        
+        // Override removeClaim to update numbers
+        const originalRemoveClaim = window.removeClaim;
+        window.removeClaim = function(claimIndex) {
+            if (originalRemoveClaim) {
+                originalRemoveClaim(claimIndex);
+            } else {
+                const claim = document.querySelector(`[data-claim-index="${claimIndex}"]`);
+                if (claim) {
+                    claim.remove();
+                    delete stepCounts[claimIndex];
+                }
+            }
+            updateReproducibleClaimNumbers();
+        }
+        
+        // Override addClaim to update numbers
+        const originalAddClaim = window.addClaim;
+        window.addClaim = function() {
+            if (originalAddClaim) {
+                originalAddClaim();
+            }
+            updateReproducibleClaimNumbers();
+        }
+        
+        // Ensure the non-reproducible claim functions are available
+        if (typeof addNonReproducibleClaim === 'undefined') {
+            let nonReproducibleClaimCount = 0;
+            
+            window.addNonReproducibleClaim = function() {
+                const container = document.getElementById('nonReproducibleClaimsContainer');
+                
+                const claimDiv = document.createElement('div');
+                claimDiv.className = 'claim-block';
+                claimDiv.setAttribute('data-non-reproducible-index', nonReproducibleClaimCount);
+                
+                // Check if this is the first claim being added
+                const existingClaims = container.querySelectorAll('.claim-block').length;
+                const displayStyle = existingClaims > 0 ? 'block' : 'none';
+                
+                claimDiv.innerHTML = `
+                    <h3>Non-Reproducible Claim <span class="claim-number">${existingClaims + 1}</span></h3>
+                    <div class="form-group">
+                        <label for="non_reproducible_claim_${nonReproducibleClaimCount}">Claim Description</label>
+                        <textarea id="non_reproducible_claim_${nonReproducibleClaimCount}" name="non_reproducible_claim_${nonReproducibleClaimCount}" rows="3"></textarea>
+                        <small>The specific non-reproducible claim from the paper</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="non_reproducible_reason_${nonReproducibleClaimCount}">Reason for Non-Reproducibility</label>
+                        <textarea id="non_reproducible_reason_${nonReproducibleClaimCount}" name="non_reproducible_reason_${nonReproducibleClaimCount}" rows="2"></textarea>
+                        <small>Explain why this claim cannot be reproduced</small>
+                    </div>
+                    
+                    <button type="button" class="btn-remove-claim" onclick="removeNonReproducibleClaim(${nonReproducibleClaimCount})" style="display: ${displayStyle};">Remove Claim</button>
+                `;
+                
+                container.appendChild(claimDiv);
+                nonReproducibleClaimCount++;
+                
+                updateNonReproducibleClaimNumbers();
+            }
+            
+            window.removeNonReproducibleClaim = function(claimIndex) {
+                const claim = document.querySelector(`[data-non-reproducible-index="${claimIndex}"]`);
+                if (claim) {
+                    claim.remove();
+                    updateNonReproducibleClaimNumbers();
+                }
+            }
+            
+            window.updateNonReproducibleClaimNumbers = function() {
+                const claims = document.querySelectorAll('#nonReproducibleClaimsContainer .claim-block');
+                const removeButtons = document.querySelectorAll('#nonReproducibleClaimsContainer .btn-remove-claim');
+                
+                // Update claim numbers
+                claims.forEach((claim, index) => {
+                    const h3 = claim.querySelector('h3');
+                    if (h3) {
+                        h3.innerHTML = `Non-Reproducible Claim ${index + 1}`;
+                    }
+                });
+                
+                // Update remove button visibility
+                removeButtons.forEach(button => {
+                    button.style.display = claims.length > 1 ? 'block' : 'none';
+                });
+            }
+            
+            // Initialize with one non-reproducible claim on page load
+            window.addEventListener('DOMContentLoaded', function() {
+                if (document.getElementById('nonReproducibleClaimsContainer').children.length === 0) {
+                    addNonReproducibleClaim();
+                }
+            });
+        }
+    </script>
 </body>
 </html>

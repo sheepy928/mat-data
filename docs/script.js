@@ -1,5 +1,24 @@
 let claimCount = 1;
 let stepCounts = {0: 1};
+let nonReproducibleClaimCount = 1;
+
+function toggleContext(claimIndex) {
+    const contextGroup = document.getElementById(`context_group_${claimIndex}`);
+    const button = contextGroup.previousElementSibling;
+    
+    if (contextGroup.style.display === 'none') {
+        contextGroup.style.display = 'block';
+        button.textContent = '− Remove Context';
+    } else {
+        contextGroup.style.display = 'none';
+        button.textContent = '+ Add Context (Optional)';
+        // Clear the context field when hiding
+        const contextField = document.getElementById(`context_${claimIndex}`);
+        if (contextField) {
+            contextField.value = '';
+        }
+    }
+}
 
 function updateCodeUrlRequirement() {
     const claimType = document.querySelector('input[name="claim_type"]:checked').value;
@@ -64,6 +83,15 @@ function addClaim() {
             <small>The specific claim from the paper you're documenting</small>
         </div>
         
+        <button type="button" class="btn-context-toggle" onclick="toggleContext(${claimCount})">+ Add Context (Optional)</button>
+        <div class="context-group" id="context_group_${claimCount}" style="display: none;">
+            <div class="form-group">
+                <label for="context_${claimCount}">Context</label>
+                <textarea id="context_${claimCount}" name="context_${claimCount}" rows="2"></textarea>
+                <small>Conditions or assumptions under which this claim is valid</small>
+            </div>
+        </div>
+        
         <div class="form-group">
             <label>Reproduction Instructions *</label>
             <div class="instructions-container" id="instructions_${claimCount}">
@@ -97,7 +125,54 @@ function removeClaim(claimIndex) {
 
 function updateRemoveButtons() {
     const claims = document.querySelectorAll('.claim-block');
-    const removeButtons = document.querySelectorAll('.btn-remove-claim');
+    const removeButtons = document.querySelectorAll('.claim-block .btn-remove-claim');
+    
+    removeButtons.forEach(button => {
+        button.style.display = claims.length > 1 ? 'block' : 'none';
+    });
+}
+
+function addNonReproducibleClaim() {
+    const container = document.getElementById('nonReproducibleClaimsContainer');
+    
+    const claimDiv = document.createElement('div');
+    claimDiv.className = 'claim-block';
+    claimDiv.setAttribute('data-non-reproducible-index', nonReproducibleClaimCount);
+    
+    claimDiv.innerHTML = `
+        <h3>Non-Reproducible Claim ${nonReproducibleClaimCount + 1}</h3>
+        <div class="form-group">
+            <label for="non_reproducible_claim_${nonReproducibleClaimCount}">Claim Description</label>
+            <textarea id="non_reproducible_claim_${nonReproducibleClaimCount}" name="non_reproducible_claim_${nonReproducibleClaimCount}" rows="3"></textarea>
+            <small>The specific non-reproducible claim from the paper</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="non_reproducible_reason_${nonReproducibleClaimCount}">Reason for Non-Reproducibility</label>
+            <textarea id="non_reproducible_reason_${nonReproducibleClaimCount}" name="non_reproducible_reason_${nonReproducibleClaimCount}" rows="2"></textarea>
+            <small>Explain why this claim cannot be reproduced</small>
+        </div>
+        
+        <button type="button" class="btn-remove-claim" onclick="removeNonReproducibleClaim(${nonReproducibleClaimCount})">Remove Claim</button>
+    `;
+    
+    container.appendChild(claimDiv);
+    nonReproducibleClaimCount++;
+    
+    updateNonReproducibleRemoveButtons();
+}
+
+function removeNonReproducibleClaim(claimIndex) {
+    const claim = document.querySelector(`[data-non-reproducible-index="${claimIndex}"]`);
+    if (claim) {
+        claim.remove();
+        updateNonReproducibleRemoveButtons();
+    }
+}
+
+function updateNonReproducibleRemoveButtons() {
+    const claims = document.querySelectorAll('#nonReproducibleClaimsContainer .claim-block');
+    const removeButtons = document.querySelectorAll('#nonReproducibleClaimsContainer .btn-remove-claim');
     
     removeButtons.forEach(button => {
         button.style.display = claims.length > 1 ? 'block' : 'none';
@@ -119,6 +194,15 @@ function resetForm() {
                     <small>The specific claim from the paper you're documenting</small>
                 </div>
                 
+                <button type="button" class="btn-context-toggle" onclick="toggleContext(0)">+ Add Context (Optional)</button>
+                <div class="context-group" id="context_group_0" style="display: none;">
+                    <div class="form-group">
+                        <label for="context_0">Context</label>
+                        <textarea id="context_0" name="context_0" rows="2"></textarea>
+                        <small>Conditions or assumptions under which this claim is valid</small>
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <label>Reproduction Instructions *</label>
                     <div class="instructions-container" id="instructions_0">
@@ -134,8 +218,30 @@ function resetForm() {
             </div>
         `;
         
+        // Reset non-reproducible claims
+        const nonReproducibleContainer = document.getElementById('nonReproducibleClaimsContainer');
+        nonReproducibleContainer.innerHTML = `
+            <div class="claim-block" data-non-reproducible-index="0">
+                <h3>Non-Reproducible Claim 1</h3>
+                <div class="form-group">
+                    <label for="non_reproducible_claim_0">Claim Description</label>
+                    <textarea id="non_reproducible_claim_0" name="non_reproducible_claim_0" rows="3"></textarea>
+                    <small>The specific non-reproducible claim from the paper</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="non_reproducible_reason_0">Reason for Non-Reproducibility</label>
+                    <textarea id="non_reproducible_reason_0" name="non_reproducible_reason_0" rows="2"></textarea>
+                    <small>Explain why this claim cannot be reproduced</small>
+                </div>
+                
+                <button type="button" class="btn-remove-claim" onclick="removeNonReproducibleClaim(0)" style="display: none;">Remove Claim</button>
+            </div>
+        `;
+        
         claimCount = 1;
         stepCounts = {0: 1};
+        nonReproducibleClaimCount = 1;
         
         // Hide output
         document.getElementById('output').style.display = 'none';
@@ -183,13 +289,49 @@ function collectFormData() {
             });
             
             if (instructions.length > 0) {
-                data.claims.push({
-                    claim: claimText,
-                    instruction: instructions
-                });
+                const claimData = {
+                    claim: claimText
+                };
+                
+                // Add context if provided
+                const contextText = formData.get(`context_${claimIndex}`);
+                if (contextText && contextText.trim()) {
+                    claimData.context = contextText.trim();
+                }
+                
+                claimData.instruction = instructions;
+                
+                data.claims.push(claimData);
             }
         }
     });
+    
+    // Collect non-reproducible claims
+    data.non_reproducible_claims = [];
+    const nonReproducibleBlocks = document.querySelectorAll('#nonReproducibleClaimsContainer .claim-block');
+    
+    nonReproducibleBlocks.forEach(block => {
+        const claimIndex = block.getAttribute('data-non-reproducible-index');
+        const claimText = formData.get(`non_reproducible_claim_${claimIndex}`);
+        const reasonText = formData.get(`non_reproducible_reason_${claimIndex}`);
+        
+        if (claimText && claimText.trim()) {
+            const nonReproducibleClaim = {
+                claim: claimText.trim()
+            };
+            
+            if (reasonText && reasonText.trim()) {
+                nonReproducibleClaim.reason = reasonText.trim();
+            }
+            
+            data.non_reproducible_claims.push(nonReproducibleClaim);
+        }
+    });
+    
+    // Remove empty non_reproducible_claims array if no claims were added
+    if (data.non_reproducible_claims.length === 0) {
+        delete data.non_reproducible_claims;
+    }
     
     return data;
 }
@@ -224,12 +366,27 @@ function generateOutput(format) {
             yaml += '\nclaims:\n';
             data.claims.forEach(claim => {
                 yaml += `  - claim: "${claim.claim}"\n`;
+                if (claim.context) {
+                    yaml += `    context: "${claim.context}"\n`;
+                }
                 yaml += '    instruction:\n';
                 claim.instruction.forEach(step => {
                     yaml += `      - "${step}"\n`;
                 });
                 yaml += '\n';
             });
+            
+            // Non-reproducible claims
+            if (data.non_reproducible_claims && data.non_reproducible_claims.length > 0) {
+                yaml += '\nnon_reproducible_claims:\n';
+                data.non_reproducible_claims.forEach(claim => {
+                    yaml += `  - claim: "${claim.claim}"\n`;
+                    if (claim.reason) {
+                        yaml += `    reason: "${claim.reason}"\n`;
+                    }
+                    yaml += '\n';
+                });
+            }
             
             return yaml;
         }

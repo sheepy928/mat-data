@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Non-Reproducible Claims</title>
+</head>
+<body>
+    <h1>Test Page</h1>
+    
+    <div id="nonReproducibleClaimsContainer">
+        <div class="non-reproducible-claim-block" data-non-reproducible-index="0">
+            <h3>Non-Reproducible Claim 1</h3>
+            <p>First claim</p>
+        </div>
+    </div>
+    
+    <button onclick="testAdd()">Test Add</button>
+    
+    <script>
+        let nonReproducibleClaimCount = 1;
+        
+        function testAdd() {
+            console.log('Button clicked, count:', nonReproducibleClaimCount);
+            const container = document.getElementById('nonReproducibleClaimsContainer');
+            console.log('Container found:', container);
+            
+            if (!container) {
+                console.error('Container not found!');
+                return;
+            }
+            
+            const claimDiv = document.createElement('div');
+            claimDiv.className = 'non-reproducible-claim-block';
+            claimDiv.innerHTML = `<h3>Non-Reproducible Claim ${nonReproducibleClaimCount + 1}</h3><p>New claim</p>`;
+            
+            container.appendChild(claimDiv);
+            nonReproducibleClaimCount++;
+            console.log('New claim added, new count:', nonReproducibleClaimCount);
+        }
+    </script>
+</body>
+</html>

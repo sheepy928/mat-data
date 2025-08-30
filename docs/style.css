@@ -154,6 +154,49 @@ header p {
     transition: background-color 0.3s;
 }
 
+.btn-context-toggle {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+    margin: 10px 0 15px 0;
+    display: inline-block;
+}
+
+.btn-context-toggle:hover {
+    background-color: #5a6268;
+}
+
+.context-group {
+    margin: 0 0 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-left: 4px solid #6c757d;
+    border-radius: 4px;
+}
+
+.context-group .form-group {
+    margin-bottom: 0;
+}
+
+button.btn-context-toggle {
+    background-color: #6c757d !important;
+    color: white !important;
+    border: none !important;
+    padding: 6px 14px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+    font-family: inherit !important;
+    margin: 10px 0 15px 0 !important;
+    display: inline-block !important;
+}
+
 .btn-add-step:hover,
 .btn-add-claim:hover {
     background-color: #2980b9;

@@ -127,6 +127,12 @@ class SubmissionValidator:
                     else:
                         if 'claim' not in claim or not str(claim['claim']).strip():
                             self.errors.append(f"Claim {i+1} must have a non-empty 'claim' field")
+                        
+                        # Validate optional context field
+                        if 'context' in claim:
+                            if not isinstance(claim['context'], str) or not claim['context'].strip():
+                                self.warnings.append(f"Claim {i+1} context should be a non-empty string if provided")
+                        
                         if 'instruction' not in claim:
                             self.errors.append(f"Claim {i+1} must have an 'instruction' field")
                         elif not isinstance(claim['instruction'], list):
@@ -137,6 +143,25 @@ class SubmissionValidator:
                             for j, step in enumerate(claim['instruction']):
                                 if not isinstance(step, str) or not step.strip():
                                     self.errors.append(f"Claim {i+1} instruction step {j+1} must be a non-empty string")
+        
+        # Validate non-reproducible claims (optional)
+        if 'non_reproducible_claims' in data:
+            if not isinstance(data['non_reproducible_claims'], list):
+                self.errors.append("Non-reproducible claims must be a list")
+            else:
+                for i, claim in enumerate(data['non_reproducible_claims']):
+                    if not isinstance(claim, dict):
+                        self.errors.append(f"Non-reproducible claim {i+1} must be a dictionary")
+                    else:
+                        if 'claim' not in claim or not str(claim['claim']).strip():
+                            self.errors.append(f"Non-reproducible claim {i+1} must have a non-empty 'claim' field")
+                        
+                        # Reason is optional but recommended
+                        if 'reason' in claim:
+                            if not isinstance(claim['reason'], str) or not claim['reason'].strip():
+                                self.warnings.append(f"Non-reproducible claim {i+1} reason should be a non-empty string if provided")
+                        else:
+                            self.warnings.append(f"Non-reproducible claim {i+1} should include a 'reason' field explaining why it cannot be reproduced")
 
 
 def main():
