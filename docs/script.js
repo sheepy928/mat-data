@@ -1,6 +1,6 @@
 let claimCount = 1;
 let stepCounts = {0: 1};
-let nonReproducibleClaimCount = 1;
+let nonReproducibleClaimCount = 0;
 
 function toggleContext(claimIndex) {
     const contextGroup = document.getElementById(`context_group_${claimIndex}`);
@@ -134,13 +134,14 @@ function updateRemoveButtons() {
 
 function addNonReproducibleClaim() {
     const container = document.getElementById('nonReproducibleClaimsContainer');
+    const existingClaims = container.querySelectorAll('.claim-block').length;
     
     const claimDiv = document.createElement('div');
     claimDiv.className = 'claim-block';
     claimDiv.setAttribute('data-non-reproducible-index', nonReproducibleClaimCount);
     
     claimDiv.innerHTML = `
-        <h3>Non-Reproducible Claim ${nonReproducibleClaimCount + 1}</h3>
+        <h3>Non-Reproducible Claim ${existingClaims + 1}</h3>
         <div class="form-group">
             <label for="non_reproducible_claim_${nonReproducibleClaimCount}">Claim Description</label>
             <textarea id="non_reproducible_claim_${nonReproducibleClaimCount}" name="non_reproducible_claim_${nonReproducibleClaimCount}" rows="3"></textarea>
@@ -159,6 +160,7 @@ function addNonReproducibleClaim() {
     container.appendChild(claimDiv);
     nonReproducibleClaimCount++;
     
+    updateNonReproducibleClaimNumbers();
     updateNonReproducibleRemoveButtons();
 }
 
@@ -166,6 +168,7 @@ function removeNonReproducibleClaim(claimIndex) {
     const claim = document.querySelector(`[data-non-reproducible-index="${claimIndex}"]`);
     if (claim) {
         claim.remove();
+        updateNonReproducibleClaimNumbers();
         updateNonReproducibleRemoveButtons();
     }
 }
@@ -176,6 +179,17 @@ function updateNonReproducibleRemoveButtons() {
     
     removeButtons.forEach(button => {
         button.style.display = claims.length > 1 ? 'block' : 'none';
+    });
+}
+
+function updateNonReproducibleClaimNumbers() {
+    const claims = document.querySelectorAll('#nonReproducibleClaimsContainer .claim-block');
+    
+    claims.forEach((claim, index) => {
+        const heading = claim.querySelector('h3');
+        if (heading) {
+            heading.textContent = `Non-Reproducible Claim ${index + 1}`;
+        }
     });
 }
 
@@ -241,7 +255,7 @@ function resetForm() {
         
         claimCount = 1;
         stepCounts = {0: 1};
-        nonReproducibleClaimCount = 1;
+        nonReproducibleClaimCount = 1;  // Reset to 1 since we're adding one claim with index 0
         
         // Hide output
         document.getElementById('output').style.display = 'none';
@@ -441,4 +455,12 @@ document.getElementById('submissionForm').addEventListener('submit', function(e)
     
     // Scroll to output
     document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+});
+
+// Initialize with one non-reproducible claim on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const nonReproducibleContainer = document.getElementById('nonReproducibleClaimsContainer');
+    if (nonReproducibleContainer && nonReproducibleContainer.children.length === 0) {
+        addNonReproducibleClaim();
+    }
 });

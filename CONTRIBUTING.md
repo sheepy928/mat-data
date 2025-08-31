@@ -1,12 +1,12 @@
-# Contributing Guidelines
+# RepliCan: Reproducibility Challenge
 
-Thank you for contributing to our materials science paper reproducibility database! Please follow these guidelines to submit paper reproduction instructions.
+Thank you for your interests in contribut to our materials science paper reproducibility benchmark! Please follow these guidelines to submit paper reproduction instructions.
 
 ## How to Contribute
 
 ### Option 1: Use the Online Form (Recommended)
 
-1. Visit our [submission form](https://YOUR_USERNAME.github.io/mat-data/)
+1. Visit our [submission form](https://JHU-CLSP.github.io/RepliCan-C4C/)
 2. Fill out all required fields
 3. Generate and download your submission file
 4. Fork this repository and add the file to `submissions/`
@@ -30,6 +30,7 @@ Every submission must include these fields:
 - `identifier`: Paper identifier (e.g., arXiv ID, DOI)
 - `code_url`: URL to the code repository (GitHub or other)
 - `claims`: List of reproducible claims with instructions (at least one required)
+- `non_reproducible_claims`: List of non-reproducible claims with reasons
 
 ### Optional Fields
 
@@ -46,19 +47,14 @@ Each claim must have:
 ### Supported Formats
 
 - JSON (`.json`)
-- YAML (`.yaml` or `.yml`)
+- YAML (`.yaml`)
 
-### File Naming
-
-- Use descriptive filenames based on the paper
-- Only use letters, numbers, underscores, and hyphens
-- Examples: `response_matching_2024.json`, `dft-validation-li-s.yaml`
 
 ## Examples
 
 See example files in the `submissions/` directory:
-- [`example_submission.json`](submissions/example_submission.json)
-- [`example_submission.yaml`](submissions/example_submission.yaml)
+- [`example_submission_in.json`](submissions/example_submission_in.json)
+- [`we_also_accept_submission_in.yaml`](submissions/we_also_accept_submission_in.yaml)
 
 ## Example YAML Structure
 
@@ -92,7 +88,7 @@ Your submission will be automatically validated when you create a Pull Request. 
 
 1. File format (must be valid JSON or YAML)
 2. All required fields are present and non-empty
-3. URLs are properly formatted (must start with http:// or https://)
+3. URLs are properly formatted
 4. At least one claim with instructions is provided
 5. Username format is valid
 6. Code repository URL is provided
@@ -107,11 +103,11 @@ Once your PR is merged:
 ## Tips for Good Reproduction Instructions
 
 - Be specific about software versions and dependencies
-- Include exact commands that can be copy-pasted
+- Include exact commands that can be copy-pasted into a terminal
 - Specify expected outputs and acceptable ranges
 - Note computational requirements (time, memory, GPUs)
 - Include checksums or commit hashes for reproducibility
 
 ## Questions?
 
-If you have questions about the data structure or submission process, please open an issue in this repository.
+If you have questions about the data structure or submission process, feel free to open an issue in this repository.
