@@ -40,6 +40,8 @@ jobs:
           submissions/**/*.yml
         files_ignore: |
           submissions/.gitkeep
+          submissions/example_submission_in.json
+          submissions/we_also_accept_submission_in.yaml
     
     - name: Validate submissions
       run: |

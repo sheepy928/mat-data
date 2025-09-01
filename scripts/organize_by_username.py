@@ -47,7 +47,12 @@ def organize_files(source_dir: str, target_dir: str):
         # Skip .gitkeep and example files
         if filepath.name == '.gitkeep':
             continue
-        if filepath.stem.lower() == 'example_submission':
+        # Skip specific example files that should always be preserved
+        if filepath.name in ['example_submission_in.json', 'we_also_accept_submission_in.yaml']:
+            print(f"Skipping preserved example file: {filepath}")
+            continue
+        # Also skip any file with 'example_submission' in the name for backwards compatibility
+        if 'example_submission' in filepath.stem.lower():
             print(f"Skipping example file: {filepath}")
             continue
             
