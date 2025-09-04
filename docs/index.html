@@ -37,7 +37,7 @@
 
                 <div class="form-group">
                     <label for="identifier">Paper Identifier *</label>
-                    <input type="text" id="identifier" name="identifier" required placeholder="10.48550/arXiv.1706.03762">
+                    <input type="text" id="identifier" name="identifier" required placeholder="https://doi.org/10.48550/arXiv.1706.03762">
                     <small>arXiv ID, DOI, or other unique identifier</small>
                 </div>
 
@@ -53,7 +53,7 @@
                             <input type="radio" name="claim_type" value="pip_libraries" onchange="updateCodeUrlRequirement()">
                             <span>Pip-installable Libraries</span>
                             <small>Claims reproducible with standard libraries (code URL optional)<br>
-                            <em>Note: This is only for experiments that solely rely on CLI tools installed and does not require complex code base.</em></small>
+                            <em>Note: This is only for experiments that solely rely on CLI tools installed and does not require complex code base. Please clearly mention all tools/libraries used in your reproduction instructions.</em></small>
                         </label>
                     </div>
                 </div>

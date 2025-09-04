@@ -65,6 +65,15 @@ function removeStep(claimIndex, stepIndex) {
                 break;
             }
         }
+        
+        // Renumber remaining steps
+        const remainingSteps = container.getElementsByClassName('instruction-step');
+        Array.from(remainingSteps).forEach((step, index) => {
+            const input = step.querySelector('input');
+            if (input) {
+                input.placeholder = `Step ${index + 1}`;
+            }
+        });
     }
 }
 
